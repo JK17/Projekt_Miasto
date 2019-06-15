@@ -48,8 +48,8 @@ void Miasto::zaludnij(int N)
   {
 
     double xk, yk; int barwa;
-    xk=25*(rand()/RAND_MAX);
-    yk=25*(rand()/RAND_MAX);
+    xk=25*((double)rand()/RAND_MAX);
+    yk=25*((double)rand()/RAND_MAX);
     if (i%2==0)
     {
       barwa=0;
@@ -69,7 +69,7 @@ double Kibic::zadowolenie (Miasto m)
   for(int i=0; i<m.kibice.size();i++)
   {
       double odleglosc;
-      odleglosc = sqrt(pow((x-m.kibice.at(i).x),2)+pow((y-m.kibice.at(i).x),2));//------------------sprawdzam odleglosc miedzy kibicami
+      odleglosc = sqrt(pow((x-m.kibice.at(i).x),2)+pow((y-m.kibice.at(i).y),2));//------------------sprawdzam odleglosc miedzy kibicami
       if(odleglosc<1)//------------------------------------------------------------------------jesli odleglosc jest odpowiednia, spradzam klub
       {
         if(klub==m.kibice.at(i).klub)//-----------------------------------------------------------------------------jesli ten sam klub dodaje zadowolenie
@@ -91,7 +91,7 @@ double Kibic::zadowolenie (Miasto m)
     for (int i=0; i<kibice.size();i++)
     {
       double aktualne_zadowolenie=kibice.at(i).zadowolenie(*this);
-      srednie_zadowolenie=+aktualne_zadowolenie;
+      srednie_zadowolenie+=aktualne_zadowolenie;
       if(aktualne_zadowolenie<0)
       {
         kibice.at(i).przeprowadzka();
@@ -102,8 +102,8 @@ double Kibic::zadowolenie (Miasto m)
   //=============================================================================
   void Kibic::przeprowadzka()
   {
-    x=cos((rand()/(double)RAND_MAX)*2*M_PI)+x;
-    y=sin((rand()/(double)RAND_MAX)*2*M_PI)+y;
+    x+=cos((rand()/(double)RAND_MAX)*2*M_PI);
+    y+=sin((rand()/(double)RAND_MAX)*2*M_PI);
   }
 //====================================================================================
 void Miasto::zapisz_i_narysuj()
@@ -115,13 +115,13 @@ void Miasto::zapisz_i_narysuj()
 
     for(int i=0;i<kibice.size();i++)
     {
-        if(kibice.at(i).klub=0)
+        if(kibice.at(i).klub==0)
         {
-          pliklegia<<kibice.at(i).x<<" "<<kibice.at(i).y<<endl;
+          pliklegia<<kibice.at(i).x<< '\t'<<kibice.at(i).y<<endl;
         }
-        if(kibice.at(i).klub=0)
+        if(kibice.at(i).klub==1)
         {
-          plikpolonia<<kibice.at(i).x<<" "<<kibice.at(i).y<<endl;
+          plikpolonia<<kibice.at(i).x<< '\t' <<kibice.at(i).y<<endl;
         }
     }
     pliklegia.close();
@@ -130,7 +130,7 @@ void Miasto::zapisz_i_narysuj()
     ofstream skrypt("skrypt.gp");
 
     skrypt<<"plot \"legia.txt\" with points pointtype 7 lt 2,\"polonia.txt\" with points pointtype 7 lt 7" << endl;
-    skrypt<<"pause -1 \"Wciśnij ENTER\" " << endl;
+    skrypt<<"pause -1 \"Wciśnij ENTER\" ";
 
     skrypt.close();
     system("gnuplot skrypt.gp" );
